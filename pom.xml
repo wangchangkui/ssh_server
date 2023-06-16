@@ -15,9 +15,18 @@
         <netty-all>4.1.93.Final</netty-all>
         <hutool.version>5.8.19</hutool.version>
         <yaml.version>1.29</yaml.version>
+        <ssh-core>2.10.0</ssh-core>
     </properties>
 
     <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.sshd/sshd-core -->
+        <dependency>
+            <groupId>org.apache.sshd</groupId>
+            <artifactId>sshd-core</artifactId>
+            <version>${ssh-core}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.yaml</groupId>
