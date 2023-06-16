@@ -1,5 +1,8 @@
 package com.coderwang.exception;
 
+/**
+ * @author 29059
+ */
 public class ReadConfigException extends RuntimeException{
 
     public ReadConfigException() {

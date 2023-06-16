@@ -61,6 +61,9 @@ public class YamlReadConfig implements ReadConfig{
             // 加载默认的配置文件
             for (String file : defaultFileName) {
                 try (InputStream ins = this.getClass().getClassLoader().getResourceAsStream(file)) {
+                    if(ins == null){
+                        continue;
+                    }
                     ConnectConfig read = read(ins);
                     if(read == null){
                         continue;
@@ -89,15 +92,15 @@ public class YamlReadConfig implements ReadConfig{
             PropertyReadAnnotation annotation = field.getAnnotation(PropertyReadAnnotation.class);
             String fieldName = field.getName();
             String propertyKey = annotation.value();
-
+            String[] split = propertyKey.split("\\.");
             // 未设置值 也许是这个配置文件下面没有 继续获取下一个配置文件
-            if (!configMap.containsKey(propertyKey)) {
+            if (!configMap.containsKey(split[0])) {
                 return null;
             }
 
             @SuppressWarnings("unchecked")
-            LinkedHashMap<String, Object> fieldValueMap = (LinkedHashMap<String, Object>) configMap.get(propertyKey);
-            Object fieldValue = fieldValueMap.get(fieldName);
+            LinkedHashMap<String, Object> fieldValueMap = (LinkedHashMap<String, Object>) configMap.get(split[0]);
+            Object fieldValue = fieldValueMap.get(split[1]);
 
             if (fieldValue == null) {
                 throw new ReadConfigException("参数未设置值：" + propertyKey + "." + fieldName);

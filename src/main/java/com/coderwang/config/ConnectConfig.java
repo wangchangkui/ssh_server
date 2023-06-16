@@ -11,7 +11,7 @@ public class ConnectConfig {
     private String host;
 
     @PropertyReadAnnotation("ssh.port")
-    private String port;
+    private Integer port;
 
     @PropertyReadAnnotation("ssh.user")
     private String userName;
@@ -27,11 +27,11 @@ public class ConnectConfig {
         this.host = host;
     }
 
-    public String getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(String port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 

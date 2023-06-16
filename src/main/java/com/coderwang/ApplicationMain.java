@@ -4,12 +4,12 @@ import com.coderwang.config.ConnectConfig;
 import com.coderwang.config.CustomerReadConfig;
 import com.coderwang.config.ReadConfig;
 import com.coderwang.config.YamlReadConfig;
+import com.coderwang.connect.ConnectSsh;
 
 public class ApplicationMain
 {
     public static void main(String[] args) {
-        ReadConfig customerReadConfig = new YamlReadConfig();
-        ConnectConfig connectConfig = customerReadConfig.readConfig();
-        System.out.println(connectConfig);
+        ConnectSsh connectSsh = new ConnectSsh(new YamlReadConfig());
+        connectSsh.connectSsh();
     }
 }
