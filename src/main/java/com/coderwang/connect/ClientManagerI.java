@@ -3,7 +3,7 @@ package com.coderwang.connect;
 /**
  * @author wck
  * @version 1.0.0
- * @Description
+ * @Description 客户端管理接口
  * @createTime 2023年06月18日 21:55:00
  */
 public interface ClientManagerI {

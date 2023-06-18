@@ -11,10 +11,6 @@ import com.coderwang.connect.CostumerClientManager;
 public class ApplicationMain
 {
     public static void main(String[] args) {
-        ConnectSsh connectSsh = new ConnectSsh(new YamlReadConfig());
-        connectSsh.connectSsh();
-        ClientEntity client = CostumerClientManager.getInstance().getClient("192.168.100.111");
-        client.writeCmd("ls -l \n",100);
-        client.writeCmd("pwd \n",100);
+
     }
 }
