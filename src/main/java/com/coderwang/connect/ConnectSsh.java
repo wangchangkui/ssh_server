@@ -2,22 +2,16 @@ package com.coderwang.connect;
 
 import com.coderwang.config.ConnectConfig;
 import com.coderwang.config.ReadConfig;
-import com.coderwang.exception.ConnectException;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.channel.ClientChannel;
 import org.apache.sshd.client.channel.ClientChannelEvent;
+import org.apache.sshd.client.future.ConnectFuture;
 import org.apache.sshd.client.session.ClientSession;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.EnumSet;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -34,39 +28,42 @@ public class ConnectSsh {
     }
 
 
-    /**
-     * 连接到一个ssh 服务器
-     */
-    public void connectSsh(){
+    public void connectSsh() {
         ConnectConfig connectConfig = readConfig.readConfig();
-        try{
-            sshConnect(connectConfig);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ConnectException("连接服务器失败了",e);
-        }
-    }
-
-
-    public void sshConnect(ConnectConfig connectConfig){
-        SshClient sshClient = SshClient.setUpDefaultClient();
-        sshClient.setServerKeyVerifier((clientSession, sshPublicKey, socketAddress) -> true);
-        sshClient.setPasswordIdentityProvider(sessionContext -> List.of(connectConfig.getPassWord()));
-        sshClient.start();
-        ClientSession session = null;
+        SshClient client = SshClient.setUpDefaultClient();
+        client.start();
         try {
-            session = sshClient
-                    .connect(connectConfig.getUserName(),connectConfig.getHost(),connectConfig.getPort())
-                    .verify()
-                    .getSession();
-            session.addPasswordIdentity(connectConfig.getPassWord());
-            if (session.isOpen()) {
+            // 连接SSH服务器
+            ConnectFuture connectFuture = client.connect(connectConfig.getUserName(), connectConfig.getHost(), connectConfig.getPort());
+            connectFuture.await();
+            ClientSession session = connectFuture.getSession();
+            // 创建SSH通道
+            try (session; ClientChannel channel = session.createChannel(ClientChannel.CHANNEL_SHELL)) {
+                session.addPasswordIdentity(connectConfig.getPassWord());
+                session.auth().verify();
+                // 打开SSH通道
+                channel.open().await();
                 log.info("连接服务器成功");
+                // 发送命令并等待响应
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                channel.setOut(output);
+                channel.setErr(output);
+                channel.getInvertedIn().write("ls\n".getBytes());
+                channel.getInvertedIn().flush();
+                channel.waitFor(List.of(ClientChannelEvent.STDOUT_DATA), 100);
+                String commandOutput = output.toString(StandardCharsets.UTF_8);
+                System.out.println("Command output: " + commandOutput);
+                channel.getInvertedIn().write("ls\n".getBytes());
+                channel.getInvertedIn().flush();
+                channel.getInvertedIn().close();
+                channel.waitFor(List.of(ClientChannelEvent.STDOUT_DATA), 100);
+                // 获取命令输出
+                commandOutput = output.toString(StandardCharsets.UTF_8);
+                System.out.println("Command output: " + commandOutput);
             }
-            ClientChannel shell = session.createChannel("shell");
-            shell.open().verify();
-            shell.waitFor(EnumSet.of(ClientChannelEvent.CLOSED), 0L);
+            // 关闭SSH通道
         } catch (IOException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
