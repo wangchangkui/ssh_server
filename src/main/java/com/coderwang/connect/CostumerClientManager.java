@@ -24,6 +24,17 @@ public class CostumerClientManager implements ClientManagerI {
      */
     private static final CostumerClientManager CLIENT_MANAGER = new CostumerClientManager();
 
+
+    /**
+     * 查询连接是否已经存在
+     * @param key 连接的key
+     * @return 是否存在
+     */
+    public boolean hasClient(String key){
+        return CLIENT_ENTITY_MAP.containsKey(key);
+    }
+
+
     /**
      * 获取一个连接实例
      * @return 连接实例
@@ -31,7 +42,6 @@ public class CostumerClientManager implements ClientManagerI {
     public static CostumerClientManager getInstance(){
         return CLIENT_MANAGER;
     }
-
 
 
 

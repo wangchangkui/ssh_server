@@ -1,13 +1,19 @@
 package com.coderwang.connect;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.channel.ClientChannel;
+import org.apache.sshd.client.channel.ClientChannelEvent;
 import org.apache.sshd.client.session.ClientSession;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+
+import java.util.List;
 
 /**
  * @author wck
@@ -17,6 +23,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Data
+@Builder
 public class ClientEntity{
 
 
@@ -26,6 +33,28 @@ public class ClientEntity{
 
     private ClientChannel channel;
 
+
+
+    public void writeCmd(String cmd, long writeTime){
+        if(channel == null){
+            log.warn("通道不存在,请先连接服务器后再次执行");
+            return;
+        }
+        // 发送命令并等待响应
+        String commandOutput;
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            channel.setOut(output);
+            channel.setErr(output);
+            channel.getInvertedIn().write(cmd.getBytes());
+            channel.getInvertedIn().flush();
+            channel.waitFor(List.of(ClientChannelEvent.STDOUT_DATA), writeTime);
+            //获取命令输出
+            commandOutput = output.toString(StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("Command output: " + commandOutput);
+    }
 
     /**
      * 关闭连接
