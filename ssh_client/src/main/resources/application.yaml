@@ -1,0 +1,5 @@
+ssh:
+  host: 172.18.0.18
+  port: 22
+  user: root
+  password: ssh

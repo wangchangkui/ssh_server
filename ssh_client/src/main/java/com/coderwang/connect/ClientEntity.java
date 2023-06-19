@@ -7,15 +7,12 @@ import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.channel.ClientChannel;
 import org.apache.sshd.client.channel.ClientChannelEvent;
 import org.apache.sshd.client.session.ClientSession;
-import org.apache.sshd.common.io.IoInputStream;
-import org.apache.sshd.common.io.IoReadFuture;
-import org.apache.sshd.common.util.buffer.ByteArrayBuffer;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
-
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author wck
