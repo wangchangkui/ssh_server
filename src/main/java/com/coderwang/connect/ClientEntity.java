@@ -7,9 +7,11 @@ import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.channel.ClientChannel;
 import org.apache.sshd.client.channel.ClientChannelEvent;
 import org.apache.sshd.client.session.ClientSession;
+import org.apache.sshd.common.io.IoInputStream;
+import org.apache.sshd.common.io.IoReadFuture;
+import org.apache.sshd.common.util.buffer.ByteArrayBuffer;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
@@ -33,28 +35,50 @@ public class ClientEntity{
 
     private ClientChannel channel;
 
+    private Long defaultTime;
 
 
-    public void writeCmd(String cmd, long writeTime){
+    private final List<ClientChannelEvent> list= List.of(ClientChannelEvent.STDOUT_DATA, ClientChannelEvent.STDERR_DATA);
+    /**
+     * 执行命令 然后返回结果给前端
+     * @param cmd 命令
+     * @return 内容
+     */
+    public String writeCmd(String cmd){
         if(channel == null){
             log.warn("通道不存在,请先连接服务器后再次执行");
-            return;
+            return "";
         }
         // 发送命令并等待响应
         String commandOutput;
-        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+        // 这里不能设置为静态变量，如果使用静态变量，那么每次执行命令都会使用同一个ByteArrayOutputStream 里面内容无限叠加
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream()){
             channel.setOut(output);
             channel.setErr(output);
             channel.getInvertedIn().write(cmd.getBytes());
             channel.getInvertedIn().flush();
-            channel.waitFor(List.of(ClientChannelEvent.STDOUT_DATA), writeTime);
+            channel.waitFor(list, defaultTime);
             //获取命令输出
-            commandOutput = output.toString(StandardCharsets.UTF_8);
-        } catch (IOException e) {
+            String response = output.toString();
+            String[] split = response.split(System.lineSeparator());
+            // 多判断一次 如果小于 等于 1 则说明没有输出完毕，继续等待
+            while (split.length <= 1){
+                response = output.toString(StandardCharsets.UTF_8);
+                split = response.split(System.lineSeparator());
+            }
+            commandOutput = response;
+        } catch (IOException  e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Command output: " + commandOutput);
+        int firstLineEndIndex = commandOutput.indexOf(System.lineSeparator());
+        if (firstLineEndIndex != -1) {
+            commandOutput = commandOutput.substring(firstLineEndIndex + System.lineSeparator().length());
+        }
+       return commandOutput;
     }
+
+
+
 
     /**
      * 关闭连接

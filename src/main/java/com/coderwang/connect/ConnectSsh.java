@@ -50,7 +50,12 @@ public class ConnectSsh {
             throw new RuntimeException(e);
         }
         log.info("连接服务器成功");
-        ClientEntity build = ClientEntity.builder().sshClient(client).session(session).channel(channel).build();
+        ClientEntity build = ClientEntity.builder()
+                .sshClient(client)
+                .session(session)
+                .channel(channel)
+                .defaultTime(200L)
+                .build();
         manager.addClient(connectConfig.getHost(), build);
     }
 
