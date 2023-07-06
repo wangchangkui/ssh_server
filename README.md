@@ -13,22 +13,25 @@
 
 # 代码示例：
 
-    ConnectSsh connectSshHandler = new ConnectSsh(ConnectConfigFactory.getReadConfig(ConfigType.PROPERTIES));
-    ClientEntity client = connectSshHandler.connectSshHandler();
+        // 创建连接参数
+        ConnectSshHandler connectSshHandler = new ConnectSshHandler(ConnectConfigFactory.getReadConfig(ConfigType.PROPERTIES));
+        // 注入一个连接器管理池对象(如果你有多个对象 请管理好自己的连接器对象池) 并获得连接器
+        ClientEntity client = connectSshHandler.connectSsh(CostumerClientManager.getInstance());
+        // 执行一些命令 但是不包括 ps,top,vim 等命令
         while (true){
-                System.out.println("请输入命令:");
-                // 从控制台输入获取输入的字符串
-                BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
-                String cmd;
-                try {
-                    cmd = buffer.readLine();
-                    if("exit".equals(cmd)){
-                        break;
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+            System.out.println("请输入命令:");
+            // 从控制台输入获取输入的字符串
+            BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
+            String cmd;
+            try {
+                cmd = buffer.readLine();
+                if("exit".equals(cmd)){
+                    break;
                 }
-                String response = client.writeCmd(cmd + "\n");
-                System.out.println(response);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+            String response = client.writeCmd(cmd + "\n");
+            System.out.println(response);
+        }
         client.close();
