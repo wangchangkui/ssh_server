@@ -9,7 +9,10 @@ import java.lang.reflect.Field;
 import java.util.Properties;
 import java.util.stream.Stream;
 
-public class CustomerReadConfig implements ReadConfig{
+/**
+ * @author Myxiaowang
+ */
+public class PropertiesReadConfig implements ReadConfig{
 
 
     private volatile ConnectConfig connectConfig;
@@ -22,13 +25,13 @@ public class CustomerReadConfig implements ReadConfig{
 
 
 
-    public CustomerReadConfig(String configPath){
+    public PropertiesReadConfig(String configPath){
         this.configPath = configPath;
 
     }
 
 
-    public CustomerReadConfig(){
+    public PropertiesReadConfig(){
 
     }
 

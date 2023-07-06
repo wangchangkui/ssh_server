@@ -19,17 +19,18 @@ public class ConnectSsh {
     private final ReadConfig readConfig;
 
 
+
     public ConnectSsh(ReadConfig readConfig) {
         this.readConfig = readConfig;
     }
 
 
-    public void connectSsh() {
+    public ClientEntity connectSsh() {
         CostumerClientManager manager = CostumerClientManager.getInstance();
         ConnectConfig connectConfig = readConfig.readConfig();
         if(manager.hasClient(connectConfig.getHost())){
             log.info("连接已经存在,请勿重复连接");
-            return;
+            return null;
         }
         SshClient client = SshClient.setUpDefaultClient();
         client.start();
@@ -47,7 +48,7 @@ public class ConnectSsh {
             channel.open().await();
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            return null;
         }
         log.info("连接服务器成功");
         ClientEntity build = ClientEntity.builder()
@@ -57,6 +58,7 @@ public class ConnectSsh {
                 .defaultTime(200L)
                 .build();
         manager.addClient(connectConfig.getHost(), build);
+        return build;
     }
 
 }

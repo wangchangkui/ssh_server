@@ -13,10 +13,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class CostumerClientManager implements ClientManagerI {
 
+    private CostumerClientManager() {
+    }
+
     /**
      * 客户端连接实例
      */
     private final ConcurrentHashMap<String,ClientEntity> CLIENT_ENTITY_MAP = new ConcurrentHashMap<>();
+
 
     /**
      * 单例 唯一
@@ -41,7 +45,6 @@ public class CostumerClientManager implements ClientManagerI {
     public static CostumerClientManager getInstance(){
         return CLIENT_MANAGER;
     }
-
 
 
     @Override

@@ -1,5 +1,7 @@
 package com.coderwang;
 
+import com.coderwang.config.ConfigType;
+import com.coderwang.config.ConnectConfigFactory;
 import com.coderwang.config.YamlReadConfig;
 import com.coderwang.connect.ClientEntity;
 import com.coderwang.connect.ConnectSsh;
@@ -15,10 +17,8 @@ import java.io.InputStreamReader;
 public class ApplicationMain
 {
     public static void main(String[] args) {
-        ConnectSsh connectSsh = new ConnectSsh(new YamlReadConfig());
-        connectSsh.connectSsh();
-
-        ClientEntity client= CostumerClientManager.getInstance().getClient("101.37.253.142");
+        ConnectSsh connectSsh = new ConnectSsh(ConnectConfigFactory.getReadConfig(ConfigType.PROPERTIES));
+        ClientEntity client = connectSsh.connectSsh();
         while (true){
             System.out.println("请输入命令:");
             // 从控制台输入获取输入的字符串
