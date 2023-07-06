@@ -1,5 +1,5 @@
 ssh:
-  host: 101.37.253.142
+  host: 192.168.100.1
   port: 22
   user: root
-  password: wck@3798405
+  password: aaa
