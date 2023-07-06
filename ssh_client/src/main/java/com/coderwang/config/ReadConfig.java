@@ -26,6 +26,6 @@ public interface ReadConfig {
         } else if (targetType == Boolean.class || targetType == boolean.class) {
             return Boolean.parseBoolean(value);
         }
-        return null;
+        return value;
     }
 }
