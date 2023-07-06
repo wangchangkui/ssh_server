@@ -23,7 +23,7 @@ public class ApplicationTest {
     @Test
     void test1(){
         // 创建连接参数
-        ConnectSshHandler connectSshHandler = new ConnectSshHandler(ConnectConfigFactory.getReadConfig(ConfigType.PROPERTIES));
+        ConnectSshHandler connectSshHandler = new ConnectSshHandler(ConnectConfigFactory.getReadConfig(ConfigType.YAML));
         // 注入一个连接器管理池对象(如果你有多个对象 请管理好自己的连接器对象池) 并获得连接器
         ClientEntity client = connectSshHandler.connectSsh(CostumerClientManager.getInstance());
         // 执行一些命令 但是不包括 ps,top,vim 等命令
