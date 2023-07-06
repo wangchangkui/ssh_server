@@ -28,6 +28,8 @@ public interface ReadConfig {
             return Integer.parseInt(value);
         } else if (targetType == Boolean.class || targetType == boolean.class) {
             return Boolean.parseBoolean(value);
+        }else if(targetType == Long.class || targetType == long.class) {
+            return Long.parseLong(value);
         }
         return value;
     }

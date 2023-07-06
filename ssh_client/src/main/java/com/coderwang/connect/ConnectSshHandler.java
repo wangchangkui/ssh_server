@@ -17,17 +17,37 @@ import java.io.IOException;
 @Slf4j
 public class ConnectSshHandler {
 
-    private final ReadConfig readConfig;
+    private  ReadConfig readConfig;
 
 
+    public void setReadConfig(ReadConfig readConfig) {
+        this.readConfig = readConfig;
+    }
 
     public ConnectSshHandler(ReadConfig readConfig) {
         this.readConfig = readConfig;
     }
 
+    public ConnectSshHandler() {
+    }
 
+    /**
+     * 通过配置文件连接 请确保配置文件读取器已经存在
+     * @param manager 存储管理器
+     * @return 连接实例
+     */
     public ClientEntity connectSsh(ClientManagerI manager) {
         ConnectConfig connectConfig = readConfig.readConfig();
+        return connectSsh(connectConfig,manager);
+    }
+
+    /**
+     * 通过参数直接连接
+     * @param connectConfig 连接参数
+     * @param manager 存储管理器
+     * @return 连接实例
+     */
+    public ClientEntity connectSsh(ConnectConfig connectConfig,ClientManagerI manager){
         if(manager.hasClient(connectConfig.getHost())){
             log.info("连接已经存在,请勿重复连接");
             return null;
@@ -54,7 +74,7 @@ public class ConnectSshHandler {
                 .sshClient(client)
                 .session(session)
                 .channel(channel)
-                .defaultTime(200L)
+                .defaultTime(connectConfig.getTimeOut())
                 .build();
         manager.addClient(connectConfig.getHost(), build);
         return build;

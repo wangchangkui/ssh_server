@@ -22,6 +22,24 @@ public class ConnectConfig {
     @PropertyReadAnnotation("ssh.password")
     private String passWord;
 
+    @PropertyReadAnnotation("ssh.timeout")
+    private Long timeOut;
+
+    /**
+     * 连接超时器
+     * @return 超时时间
+     */
+    public Long getTimeOut() {
+        if(timeOut == null){
+            return 200L;
+        }
+        return timeOut;
+    }
+
+    public void setTimeOut(Long timeOut) {
+        this.timeOut = timeOut;
+    }
+
     public String getHost() {
         return host;
     }
