@@ -93,7 +93,7 @@ public class PropertiesReadConfig implements ReadConfig{
             PropertyReadAnnotation annotation = d.getAnnotation(PropertyReadAnnotation.class);
             Object value = finalProperties.get(annotation.value());
             try {
-                d.set(connectConfig,value);
+                d.set(connectConfig, convertValue(value.toString(),d.getType()));
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }

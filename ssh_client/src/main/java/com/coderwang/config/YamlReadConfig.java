@@ -114,23 +114,5 @@ public class YamlReadConfig implements ReadConfig{
     }
 
 
-    /**
-     * 转换一个默认的参数
-     * @param value 参数值
-     * @param targetType 类型
-     * @return 转换后的结果对象
-     */
-    private static Object convertValue(String value, Class<?> targetType) {
-        if (targetType == String.class) {
-            return value;
-        } else if (targetType == Integer.class || targetType == int.class) {
-            return Integer.parseInt(value);
-        } else if (targetType == Boolean.class || targetType == boolean.class) {
-            return Boolean.parseBoolean(value);
-        }
-        // 可以根据需要添加更多类型的转换
-
-        return null;
-    }
 
 }
