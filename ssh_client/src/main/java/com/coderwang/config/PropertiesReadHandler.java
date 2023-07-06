@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 /**
  * @author Myxiaowang
  */
-public class PropertiesReadConfig implements ReadConfig{
+public class PropertiesReadHandler implements ReadConfig{
 
 
     private volatile ConnectConfig connectConfig;
@@ -25,13 +25,13 @@ public class PropertiesReadConfig implements ReadConfig{
 
 
 
-    public PropertiesReadConfig(String configPath){
+    public PropertiesReadHandler(String configPath){
         this.configPath = configPath;
 
     }
 
 
-    public PropertiesReadConfig(){
+    public PropertiesReadHandler(){
 
     }
 

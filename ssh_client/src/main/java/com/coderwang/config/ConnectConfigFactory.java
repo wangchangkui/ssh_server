@@ -10,8 +10,8 @@ public class ConnectConfigFactory {
 
     public static ReadConfig getReadConfig(ConfigType configType) {
         return switch (configType) {
-            case YAML -> new YamlReadConfig();
-            case PROPERTIES -> new PropertiesReadConfig();
+            case YAML -> new YamlReadHandler();
+            case PROPERTIES -> new PropertiesReadHandler();
         };
     }
 }

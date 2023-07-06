@@ -28,6 +28,13 @@ public interface ClientManagerI {
      */
     void removeClient(Object key);
 
+    /**
+     * 判断是否存在一个连接对象
+     * @param key 连接对象的key
+     * @return 是否存在
+     */
+    boolean hasClient(String key);
+
 
 
 

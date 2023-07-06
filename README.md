@@ -13,8 +13,8 @@
 
 # 代码示例：
 
-    ConnectSsh connectSsh = new ConnectSsh(ConnectConfigFactory.getReadConfig(ConfigType.PROPERTIES));
-    ClientEntity client = connectSsh.connectSsh();
+    ConnectSsh connectSshHandler = new ConnectSsh(ConnectConfigFactory.getReadConfig(ConfigType.PROPERTIES));
+    ClientEntity client = connectSshHandler.connectSshHandler();
         while (true){
                 System.out.println("请输入命令:");
                 // 从控制台输入获取输入的字符串

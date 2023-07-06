@@ -33,6 +33,7 @@ public class CostumerClientManager implements ClientManagerI {
      * @param key 连接的key
      * @return 是否存在
      */
+    @Override
     public boolean hasClient(String key){
         return CLIENT_ENTITY_MAP.containsKey(key);
     }

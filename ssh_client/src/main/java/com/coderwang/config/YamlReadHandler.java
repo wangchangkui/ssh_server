@@ -10,7 +10,10 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 
-public class YamlReadConfig implements ReadConfig{
+/**
+ * @author Myxiaowang
+ */
+public class YamlReadHandler implements ReadConfig{
 
     String[] defaultFileName = {"application.yaml","application.yml","config.yaml","config.yml"};
 
@@ -19,11 +22,11 @@ public class YamlReadConfig implements ReadConfig{
     private volatile ConnectConfig connectConfig;
 
 
-    public YamlReadConfig(String useFile) {
+    public YamlReadHandler(String useFile) {
         this.useFile = useFile;
     }
 
-    public YamlReadConfig() {
+    public YamlReadHandler() {
     }
 
 

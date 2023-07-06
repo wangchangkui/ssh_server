@@ -1,5 +1,8 @@
 package com.coderwang.config;
 
+/**
+ * @author Myxiaowang
+ */
 public interface ReadConfig {
 
 

@@ -2,6 +2,7 @@ package com.coderwang.connect;
 
 import com.coderwang.config.ConnectConfig;
 import com.coderwang.config.ReadConfig;
+import com.coderwang.exception.ConnectException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.channel.ClientChannel;
@@ -14,19 +15,18 @@ import java.io.IOException;
  * @author 29059
  */
 @Slf4j
-public class ConnectSsh {
+public class ConnectSshHandler {
 
     private final ReadConfig readConfig;
 
 
 
-    public ConnectSsh(ReadConfig readConfig) {
+    public ConnectSshHandler(ReadConfig readConfig) {
         this.readConfig = readConfig;
     }
 
 
-    public ClientEntity connectSsh() {
-        CostumerClientManager manager = CostumerClientManager.getInstance();
+    public ClientEntity connectSsh(ClientManagerI manager) {
         ConnectConfig connectConfig = readConfig.readConfig();
         if(manager.hasClient(connectConfig.getHost())){
             log.info("连接已经存在,请勿重复连接");
@@ -47,8 +47,7 @@ public class ConnectSsh {
             // 打开SSH通道
             channel.open().await();
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new ConnectException("连接服务器失败:"+e.getMessage());
         }
         log.info("连接服务器成功");
         ClientEntity build = ClientEntity.builder()

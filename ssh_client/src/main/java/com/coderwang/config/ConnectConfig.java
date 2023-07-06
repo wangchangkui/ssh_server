@@ -5,6 +5,9 @@ import com.coderwang.antation.PropertyReadAnnotation;
 
 
 
+/**
+ * @author Myxiaowang
+ */
 public class ConnectConfig {
 
     @PropertyReadAnnotation("ssh.host")
